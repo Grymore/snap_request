@@ -10,7 +10,7 @@ const {
 } = require("../controller/notificationController.js");
 
 router.post("/gettoken", getTokenController);
-router.post("/getvanumber", getVaNumberController);
+// router.post("/getvanumber", getVaNumberController);
 router.post("/v1/transfer-va/payment", notificationController);
 
 module.exports = router;
