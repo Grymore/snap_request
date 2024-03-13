@@ -23,6 +23,8 @@ const getVaNumberController = async (req, res) => {
 
     const { name, email, invoice, amount } = req.body;
 
+    
+
     const body = {
       trxId: invoice,
       virtualAccountTrxType: 1,
