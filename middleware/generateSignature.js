@@ -17,7 +17,7 @@ const generateSignature = () => {
 };
 
 const generateSignature512 = (EndpointUrl, AccessToken, BodyMinify) => {
-
+  const clientId = process.env.CLIENT_ID;
   const sharedkey = process.env.API_KEY;
 
   const dateTime = new Date().toISOString();

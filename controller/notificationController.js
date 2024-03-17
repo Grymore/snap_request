@@ -1,6 +1,40 @@
+const crypto = require("crypto");
+const generate = require("../middleware/generateSignature");
+const {
+  generateToken,
+  verifySignature,
+} = require("../middleware/generateToken");
+
 const notificationController = async (req, res) => {
-  console.log("Body Request", req.headers);
-  console.log("Notification body:", req.body);
+  const requestBody = req.body;
+  const reqHeader = req.headers["x-signature"];
+  const reqTime = req.headers["x-timestamp"];
+
+  const token = await generateToken();
+  const stringBody = JSON.stringify(requestBody);
+  const BodyMinify = generate.toLowercaseHex(stringBody);
+
+  // const hasil = generate.generateSignature512(
+  //   "/v1/transfer-va/payment",
+  //   token,
+  //   BodyMinify
+  // );
+
+  // if (hasil !== reqHeader) {
+  //   res.json({ status: "Not Valid Signature" });
+  // }
+
+  // res.json({ status: "Notification received" });
+
+  // HTTPMethod + ”:“+ EndpointUrl +":"+ B2BAccessToken + ":“+ Lowercase(HexEncode(SHA-256(minify(RequestBody)))) + ":“ + X-TimeStamp
+  const stringToSign = `POST:/v1/transfer-va/payment:${token}:${BodyMinify}:${reqTime}`;
+  const verifySig = verifySignature(stringToSign, reqHeader);
+
+  if (verifySig !== true) {
+    return res.status(400).json({
+      message: "Signaturen not valid",
+    });
+  }
 
   res.json({ status: "Notification received" });
 };

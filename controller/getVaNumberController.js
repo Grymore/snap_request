@@ -21,17 +21,36 @@ const getVaNumberController = async (req, res) => {
     const tempExpired = waktu.toISOString();
     const dateTimeFinalexpired = tempExpired.substring(0, 19) + "Z";
 
-    const { name, email, invoice, amount } = req.body;
+    const { name, email, invoice, amount, channel } = req.body;
 
-    
+    const urlRoute = {
+      btnUrl: "/virtual-accounts/bi-snap-va/v1/transfer-va/create-va",
+      bncUrl: "/bi-snap-va/bnc/v1/transfer-va/create-va",
+      danamonUrl: "/virtual-accounts/bi-snap-va/v1/transfer-va/create-va",
+    };
 
+    const binRoute = {
+      btnBin: "77777",
+      danamonBin: "   89226",
+      bncBin: "90341537",
+    };
 
-    
+    let selectedUrl;
+    let selectedBin;
+
+    if (channel === "BNC") {
+      selectedUrl = urlRoute.bncUrl;
+      selectedBin = binRoute.bncBin;
+    } else {
+      selectedUrl = urlRoute.danamonUrl;
+      selectedBin = binRoute.danamonBin;
+    }
+
     const body = {
       trxId: invoice,
-      virtualAccountTrxType: 1,
+      virtualAccountTrxType: "1",
       expiredDate: dateTimeFinalexpired,
-      partnerServiceId: "959626",
+      partnerServiceId: selectedBin,
       virtualAccountName: name,
       virtualAccountEmail: email,
       virtualAccountPhone: "0816291271826",
@@ -39,12 +58,17 @@ const getVaNumberController = async (req, res) => {
         value: amount,
         currency: "IDR",
       },
+      additionalInfo: {
+        channel: "VIRTUAL_ACCOUNT_BANK_DANAMON",
+        virtualAccountConfig: {
+          reusableStatus: false,
+        },
+      },
     };
 
-
     const stringBody = JSON.stringify(body);
-    const EndpointUrl = "/bi-snap-va/btn/v1/transfer-va/create-va";
     const BodyMinify = generate.toLowercaseHex(stringBody);
+    const EndpointUrl = selectedUrl;
     const signature512 = generate.generateSignature512(
       EndpointUrl,
       token.accessToken,
@@ -63,8 +87,7 @@ const getVaNumberController = async (req, res) => {
     };
 
     try {
-      const urlReq =
-        "https://api-sandbox.doku.com/bi-snap-va/btn/v1/transfer-va/create-va";
+      const urlReq = `https://api-sandbox.doku.com${selectedUrl}`;
       const response = await axios.post(urlReq, body, config);
       console.log(response.data);
       res.json(response.data);
