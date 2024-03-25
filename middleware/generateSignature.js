@@ -1,11 +1,13 @@
-const crypto = require("crypto");
 require("dotenv").config();
+const crypto = require("crypto");
 
-const generateSignature = () => {
-  const privateKey = process.env.PRIVATE_KEY;
-  const clientId = process.env.CLIENT_ID;
-  const dateTime = new Date().toISOString();
-  const dateTimeFinal = dateTime.substring(0, 19) + "Z";
+const privateKey = process.env.PRIVATE_KEY;
+const clientId = process.env.CLIENT_ID;
+const sharedkey = process.env.API_KEY;
+const dateTime = new Date().toISOString();
+const dateTimeFinal = dateTime.substring(0, 19) + "Z";
+
+const generateSignatureToken = () => {
   const StringToSign = `${clientId}|${dateTimeFinal}`;
 
   const sign = crypto.createSign("RSA-SHA256");
@@ -17,25 +19,24 @@ const generateSignature = () => {
 };
 
 const generateSignature512 = (EndpointUrl, AccessToken, BodyMinify) => {
-  const clientId = process.env.CLIENT_ID;
-  const sharedkey = process.env.API_KEY;
-
-  const dateTime = new Date().toISOString();
-  const dateTimeFinal = dateTime.substring(0, 19) + "Z";
-
   // HTTPMethod +”:“+ EndpointUrl +":"+ AccessToken +":“+ Lowercase(HexEncode(SHA256(minify(RequestBody))))+ ":“ + TimeStamp
   const StringToSign = `POST:${EndpointUrl}:${AccessToken}:${BodyMinify}:${dateTimeFinal}`;
 
   const hmac = crypto.createHmac("sha512", sharedkey);
   hmac.update(StringToSign);
 
-  const signature = hmac.digest("base64");
+  const signature512 = hmac.digest("base64");
 
-  return signature;
+  // console.log(`ini signature512 : ${signature512}`);
+  return signature512;
 };
 
 const toLowercaseHex = (input) => {
   return crypto.createHash("sha256").update(input).digest("hex").toLowerCase();
 };
 
-module.exports = { generateSignature, generateSignature512, toLowercaseHex };
+module.exports = {
+  generateSignatureToken,
+  generateSignature512,
+  toLowercaseHex,
+};

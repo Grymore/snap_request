@@ -15,10 +15,13 @@ const {
   responseTokenController,
 } = require("../controller/responseTokenController.js");
 
+const { generateToken } = require("../middleware/generateToken.js");
+
 router.post("/gettoken", getTokenController);
 router.post("/getvanumber", getVaNumberController);
 router.post("/inquiryRequest", responseInquiryController);
 router.post("/tokenRequest", responseTokenController);
 router.post("/v1/transfer-va/payment", notificationController);
+router.post("/test", generateToken);
 
 module.exports = router;

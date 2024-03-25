@@ -13,17 +13,17 @@ const responseTokenController = async (req, res) => {
   }
 
   // Validasi Signature public key DOKU
-  const signature = req.headers["x-signature"];
-  const timestamp = req.headers["x-timestamp"];
-  const verify = validasi.verifySignatureToken(timestamp, signature);
+  // const signature = req.headers["x-signature"];
+  // const timestamp = req.headers["x-timestamp"];
+  // const verify = validasi.verifySignatureToken(timestamp, signature);
 
-  console.log(verify);
+  // console.log(verify);
 
-  if (verify !== true) {
-    return res.status(400).json({
-      message: "not valid",
-    });
-  }
+  // if (verify !== true) {
+  //   return res.status(400).json({
+  //     message: "not valid",
+  //   });
+  // }
 
   // Generate token
   function generateAccessToken(user) {
@@ -44,7 +44,7 @@ const responseTokenController = async (req, res) => {
   const token = generateAccessToken(pass);
 
   // Set token expiration time (in seconds)
-  const expiresIn = 900;
+  const expiresIn = 100;
   const response = {
     responseCode: "2007300",
     responseMessage: "Successful",
@@ -52,6 +52,11 @@ const responseTokenController = async (req, res) => {
     tokenType: "Bearer",
     expiresIn: expiresIn,
   };
+
+  // const response = {
+  //   responseCode: "4007301",
+  //   responseMessage: "Invalid Field Format Timestamp",
+  // };
 
   const headers = {
     "Content-Type": "application/json",
@@ -73,6 +78,7 @@ const responseTokenController = async (req, res) => {
 
   // Respond with token
   res.json(response);
+  res.status(200);
 };
 
 module.exports = { responseTokenController };

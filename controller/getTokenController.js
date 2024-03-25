@@ -1,6 +1,6 @@
 require("dotenv").config();
 const axios = require("axios");
-const { generateSignature } = require("../middleware/generateSignature");
+const { generateSignatureToken } = require("../middleware/generateSignature");
 
 const CLIENT_ID = process.env.CLIENT_ID;
 
@@ -8,7 +8,7 @@ const dateTime = new Date().toISOString();
 const dateTimeFinal = dateTime.substring(0, 19) + "Z";
 
 const getTokenController = async (req, res) => {
-  const signature = generateSignature();
+  const signature = generateSignatureToken();
 
   const config = {
     headers: {

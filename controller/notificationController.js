@@ -10,9 +10,12 @@ const notificationController = async (req, res) => {
   const reqHeader = req.headers["x-signature"];
   const reqTime = req.headers["x-timestamp"];
 
-  const token = await generateToken();
-  const stringBody = JSON.stringify(requestBody);
-  const BodyMinify = generate.toLowercaseHex(stringBody);
+  console.log(requestBody);
+  console.log(req.headers);
+  console.log(reqHeader);
+  // const token = await generateToken();
+  // const stringBody = JSON.stringify(requestBody);
+  // const BodyMinify = generate.toLowercaseHex(stringBody);
 
   // const hasil = generate.generateSignature512(
   //   "/v1/transfer-va/payment",
@@ -27,16 +30,20 @@ const notificationController = async (req, res) => {
   // res.json({ status: "Notification received" });
 
   // HTTPMethod + ”:“+ EndpointUrl +":"+ B2BAccessToken + ":“+ Lowercase(HexEncode(SHA-256(minify(RequestBody)))) + ":“ + X-TimeStamp
-  const stringToSign = `POST:/v1/transfer-va/payment:${token}:${BodyMinify}:${reqTime}`;
-  const verifySig = verifySignature(stringToSign, reqHeader);
+  // const stringToSign = `POST:/v1/transfer-va/payment:${token}:${BodyMinify}:${reqTime}`;
+  // const verifySig = verifySignature(stringToSign, reqHeader);
 
-  if (verifySig !== true) {
-    return res.status(400).json({
-      message: "Signaturen not valid",
-    });
-  }
-
-  res.json({ status: "Notification received" });
+  // if (verifySig !== true) {
+  //   return res.status(400).json({
+  //     message: "Signaturen not valid",
+  //   });
+  // }
+  // console.log(BodyMinify);
+  res.json({
+    status: "Notification received",
+    // body: stringBody,
+    // headers: reqHeader,
+  });
 };
 
 module.exports = { notificationController };
