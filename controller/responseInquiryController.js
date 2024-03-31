@@ -14,6 +14,9 @@ const responseInquiryController = async (req, res) => {
   const stringBody = JSON.stringify(requestBody);
   const BodyMinify = minify.toLowercaseHex(stringBody);
 
+  let va = req.body["virtualAccountNo"];
+  const va_num = va.trim();
+
   // if (signature === null) {
   //   return res.status(400).json({ error: "tidak ada signature" });
   // }
@@ -82,8 +85,8 @@ const responseInquiryController = async (req, res) => {
     responseMessage: "Successful",
     virtualAccountData: {
       partnerServiceId: "    8922",
-      customerNo: "8922323623820354",
-      virtualAccountNo: "    8922323623820354",
+      customerNo: va_num,
+      virtualAccountNo: `    ${va_num}`,
       virtualAccountName: "Toru Yamashita",
       virtualAccountEmail: "",
       virtualAccountPhone: "",
@@ -135,7 +138,7 @@ const responseInquiryController = async (req, res) => {
       english: "Success",
       indonesia: "Sukses",
     },
-    inquiryRequestId: `RequestID${randomInt(99999999)}`,
+    inquiryRequestId: randomInt(99999999),
     subCompany: "",
 
     virtualAccountTrxType: "2",

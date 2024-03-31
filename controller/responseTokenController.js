@@ -44,7 +44,7 @@ const responseTokenController = async (req, res) => {
   const token = generateAccessToken(pass);
 
   // Set token expiration time (in seconds)
-  const expiresIn = 100;
+  const expiresIn = 10;
   const response = {
     responseCode: "2007300",
     responseMessage: "Successful",

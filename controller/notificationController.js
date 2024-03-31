@@ -39,10 +39,8 @@ const notificationController = async (req, res) => {
   //   });
   // }
   // console.log(BodyMinify);
-  res.json({
-    status: "Notification received",
-    // body: stringBody,
-    // headers: reqHeader,
+  res.status(400).json({
+    message: "Signaturen not valid",
   });
 };
 
