@@ -24,7 +24,7 @@ const responseInquiryController = async (req, res) => {
   // }
 
   // // // HTTPMethod + ”:“+ EndpointUrl +":"+ B2BAccessToken + ":“+ Lowercase(HexEncode(SHA-256(minify(RequestBody)))) + ":“ + X-TimeStamp
-  const stringToSign = `POST:https://wild-streets-say.loca.lt/v1.1/transfer-va/inquiry:${bearerToken}:${BodyMinify}:${timestamp}`;
+  const stringToSign = `POST:/doku/v1.1/transfer-va/inquiry:${bearerToken}:${BodyMinify}:${timestamp}`;
 
   const verifikasi = validasi.verifySignature(stringToSign);
 
@@ -46,7 +46,6 @@ const responseInquiryController = async (req, res) => {
     "X-EXTERNAL-ID": "2",
   };
 
-
   const responseData = {
     responseCode: "2002400",
     responseMessage: "Successful",
@@ -60,22 +59,21 @@ const responseInquiryController = async (req, res) => {
         virtualAccountConfig: {
           reusableStatus: true,
           minAmount: "1000.00",
-          maxAmount: "238841000.00"
+          maxAmount: "238841000.00",
         },
-        trxId: randomInt(99999999),
+        trxId: `INV-${randomInt(99999)}`,
       },
       totalAmount: {
         value: "0.00",
         currency: "IDR",
       },
+      inquiryStatus: "00",
+      inquiryReason: {
+        english: "Success",
+        indonesia: "Sukses",
+      },
+      inquiryRequestId: randomInt(9999),
     },
-    inquiryStatus: "00",
-    inquiryReason: {
-      english: "Success",
-      indonesia: "Sukses",
-    },
-    inquiryRequestId: randomInt(99999999)
-
   };
 
   // 5. Send successful response with data

@@ -18,12 +18,15 @@ const generateSignatureToken = () => {
   return signature;
 };
 
-
-
-const generateSignature512 = (EndpointUrl, AccessToken, BodyMinify, TimeStamp) => {
+const generateSignature512 = (
+  EndpointUrl,
+  AccessToken,
+  BodyMinify,
+  TimeStamp
+) => {
   // HTTPMethod +”:“+ EndpointUrl +":"+ AccessToken +":“+ Lowercase(HexEncode(SHA256(minify(RequestBody))))+ ":“ + TimeStamp
   const StringToSign = `POST:${EndpointUrl}:${AccessToken}:${BodyMinify}:${TimeStamp}`;
-  console.log(`ini string to sign : ` + StringToSign)
+  console.log(`ini string to sign : ` + StringToSign);
   const hmac = crypto.createHmac("sha512", sharedkey);
   hmac.update(StringToSign);
 

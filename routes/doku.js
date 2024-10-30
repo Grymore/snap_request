@@ -15,9 +15,7 @@ const {
   responseTokenController,
 } = require("../controller/responseTokenController.js");
 
-const {
-  shopeepayController,
-} = require("../controller/shopeepayController.js");
+const { shopeepayController } = require("../controller/shopeepayController.js");
 
 const { generateToken } = require("../middleware/generateToken.js");
 
@@ -25,7 +23,7 @@ const { generateToken } = require("../middleware/generateToken.js");
 router.post("/getvanumber", getVaNumberController);
 router.post("/v1.1/transfer-va/inquiry", responseInquiryController);
 router.post("/v1.1/transfer-va/payment", notificationController);
-router.post("/tokenRequest", responseTokenController);
+router.post("/authorization/v1.1/access-token/b2b", responseTokenController);
 router.post("/test", generateToken);
 router.post("/shopeepay", shopeepayController);
 
