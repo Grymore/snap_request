@@ -15,13 +15,18 @@ const {
   responseTokenController,
 } = require("../controller/responseTokenController.js");
 
+const {
+  shopeepayController,
+} = require("../controller/shopeepayController.js");
+
 const { generateToken } = require("../middleware/generateToken.js");
 
-router.post("/gettoken", getTokenController);
+// router.post("/gettoken", getTokenController);
 router.post("/getvanumber", getVaNumberController);
-router.post("/inquiryRequest", responseInquiryController);
+router.post("/v1.1/transfer-va/inquiry", responseInquiryController);
+router.post("/v1.1/transfer-va/payment", notificationController);
 router.post("/tokenRequest", responseTokenController);
-router.post("/v1/transfer-va/payment", notificationController);
 router.post("/test", generateToken);
+router.post("/shopeepay", shopeepayController);
 
 module.exports = router;

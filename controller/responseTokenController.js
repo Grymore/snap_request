@@ -13,17 +13,17 @@ const responseTokenController = async (req, res) => {
   }
 
   // Validasi Signature public key DOKU
-  // const signature = req.headers["x-signature"];
-  // const timestamp = req.headers["x-timestamp"];
-  // const verify = validasi.verifySignatureToken(timestamp, signature);
+  const signature = req.headers["x-signature"];
+  const timestamp = req.headers["x-timestamp"];
+  const verify = validasi.verifySignatureToken(timestamp, signature);
 
-  // console.log(verify);
+  console.log("ini response verify : " + verify);
 
-  // if (verify !== true) {
-  //   return res.status(400).json({
-  //     message: "not valid",
-  //   });
-  // }
+  if (verify !== true) {
+    return res.status(400).json({
+      message: "not valid",
+    });
+  }
 
   // Generate token
   function generateAccessToken(user) {

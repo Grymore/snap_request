@@ -9,11 +9,13 @@ const responseInquiryController = async (req, res) => {
   const signature = req.headers["x-signature"];
   const timestamp = req.headers["x-timestamp"];
   const token = req.headers["authorization"];
-  // const bearerToken = token.split(" ")[1];
+  const bearerToken = token.split(" ")[1];
 
   const stringBody = JSON.stringify(requestBody);
   const BodyMinify = minify.toLowercaseHex(stringBody);
 
+  let partnerServiceId = req.body["partnerServiceId"];
+  let customerNo = req.body["customerNo"];
   let va = req.body["virtualAccountNo"];
   const va_num = va.trim();
 
@@ -22,19 +24,19 @@ const responseInquiryController = async (req, res) => {
   // }
 
   // // // HTTPMethod + ”:“+ EndpointUrl +":"+ B2BAccessToken + ":“+ Lowercase(HexEncode(SHA-256(minify(RequestBody)))) + ":“ + X-TimeStamp
-  // const stringToSign = `POST:https://yummy-laws-eat.loca.lt/doku/inquiryRequest:${bearerToken}:${BodyMinify}:${timestamp}`;
+  const stringToSign = `POST:https://wild-streets-say.loca.lt/v1.1/transfer-va/inquiry:${bearerToken}:${BodyMinify}:${timestamp}`;
 
-  // const verifikasi = validasi.verifySignature(stringToSign);
+  const verifikasi = validasi.verifySignature(stringToSign);
 
-  // console.log(`ini component : ${stringToSign}`);
-  // console.log(`ini signture doku : ${signature}`);
-  // console.log(verifikasi);
+  console.log(`ini component : ${stringToSign}`);
+  console.log(`ini signture doku : ${signature}`);
+  console.log(verifikasi);
 
-  // if (verifikasi !== signature) {
-  //   return res.status(400).json({
-  //     message: "signature not valid",
-  //   });
-  // }
+  if (verifikasi !== signature) {
+    return res.status(400).json({
+      message: "signature not valid",
+    });
+  }
 
   const headers = {
     "Content-Type": "application/json",
@@ -44,109 +46,36 @@ const responseInquiryController = async (req, res) => {
     "X-EXTERNAL-ID": "2",
   };
 
-  // const responseData = {
-  //   responseCode: "2002400",
-  //   responseMessage: "Successful",
-  //   virtualAccountData: {
-  //     partnerServiceId: "    8922",
-  //     customerNo: "323423820345",
-  //     virtualAccountNo: "    8922323423820345",
-  //     virtualAccountName: "Toru Yamashita",
-  //     virtualAccountEmail: "toru@oor.com",
-  //     virtualAccountPhone: "081293912081",
-  //     trxId: "23213439829713",
-  //     additionalInfo: {
-  //       virtualAccountConfig: {
-  //         reusableStatus: true,
-  //       },
-  //     },
-  //     totalAmount: {
-  //       value: "0.00",
-  //       currency: "IDR",
-  //     },
-  //   },
-  //   virtualAccountTrxType: "2",
-  //   billDetails: [
-  //     {
-  //       billName: "A bill for Toru",
-  //       billShortName: "Bill T",
-  //     },
-  //   ],
-  //   inquiryStatus: "SUCCESS",
-  //   inquiryReason: {
-  //     english: "Success",
-  //     indonesia: "Sukses",
-  //   },
-  //   inquiryRequestId: "2303223201",
-  // };
 
   const responseData = {
     responseCode: "2002400",
     responseMessage: "Successful",
     virtualAccountData: {
-      partnerServiceId: "    8922",
-      customerNo: va_num,
-      virtualAccountNo: `    ${va_num}`,
+      partnerServiceId: partnerServiceId,
+      customerNo: customerNo,
+      virtualAccountNo: va,
       virtualAccountName: "Toru Yamashita",
-      virtualAccountEmail: "",
-      virtualAccountPhone: "",
-      trxId: randomInt(99999999),
-      virtualAccountTrxType: "2",
+      virtualAccountTrxType: "O",
       additionalInfo: {
         virtualAccountConfig: {
           reusableStatus: true,
+          minAmount: "1000.00",
+          maxAmount: "238841000.00"
         },
+        trxId: randomInt(99999999),
       },
       totalAmount: {
         value: "0.00",
         currency: "IDR",
       },
     },
-    billDetails: [
-      {
-        billCode: "01",
-        billNo: "REFINFO-0adq",
-        billName: "MOHAMMAD REZA RIZAL",
-        billShortName: "MOHAMMAD",
-        billDescription: {
-          english: "PEMBAYARAN PREMI POLIS",
-          indonesia: "PAYMENT PREMIUM POLICY",
-        },
-        billSubCompany: "00001",
-        billAmount: {
-          value: "29143512",
-          currency: "IDR",
-        },
-        additionalInfo: {
-          id: "",
-          en: "",
-        },
-      },
-    ],
-    freeTexts: [
-      {
-        english: "POLIS NO.010224000025",
-        indonesia: "POLIS NO.010224000025",
-      },
-    ],
-    feeAmount: {
-      value: "0",
-      currency: "IDR",
-    },
-    inquiryStatus: "SUCCESS",
+    inquiryStatus: "00",
     inquiryReason: {
       english: "Success",
       indonesia: "Sukses",
     },
-    inquiryRequestId: randomInt(99999999),
-    subCompany: "",
+    inquiryRequestId: randomInt(99999999)
 
-    virtualAccountTrxType: "2",
-    additionalInfo: {
-      virtualAccountConfig: {
-        reusableStatus: true,
-      },
-    },
   };
 
   // 5. Send successful response with data
