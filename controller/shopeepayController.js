@@ -21,30 +21,36 @@ const shopeepayController = async (req, res) => {
   const tempExpired = waktu.toISOString();
   const dateTimeFinalexpired = tempExpired.substring(0, 19) + "Z";
 
-  const {  invoice, amount } = req.body;
+  // const {  invoice, amount } = req.body;
 
-
-const shopeeUrl = "/direct-debit/core/v1/debit/payment-host-to-host"
+  const shopeeUrl = "/direct-debit/core/v1/debit/payment-host-to-host";
   const body = {
-    partnerReferenceNo: invoice,
-    pointOfInitiation : "app",
-    urlParam: [{
+    partnerReferenceNo: `INV${randomInt(99999)}`,
+    pointOfInitiation: "app",
+    urlParam: [
+      {
         url: "https://google.com",
         type: "PAY_RETURN",
-        isDeepLink:"N"
-      }],
+        isDeepLink: "N",
+      },
+    ],
     amount: {
-      value: `${amount}`,
+      value: "200000.00",
       currency: "IDR",
     },
     additionalInfo: {
-      channel: "EMONEY_SHOPEE_PAY_SNAP"
+      channel: "EMONEY_SHOPEE_PAY_SNAP",
     },
   };
 
   const stringBody = JSON.stringify(body);
   const BodyMinify = toLowercaseHex(stringBody);
-  const signature512 = generateSignature512(shopeeUrl, token, BodyMinify, dateTimeFinal);
+  const signature512 = generateSignature512(
+    shopeeUrl,
+    token,
+    BodyMinify,
+    dateTimeFinal
+  );
 
   const config = {
     headers: {
@@ -53,7 +59,7 @@ const shopeeUrl = "/direct-debit/core/v1/debit/payment-host-to-host"
       "X-TIMESTAMP": dateTimeFinal,
       "X-SIGNATURE": signature512,
       "X-EXTERNAL-ID": randomInt(888, 99999),
-      "X-DEVICE-ID" : randomInt(777, 99999),
+      "X-DEVICE-ID": randomInt(777, 99999),
       Authorization: `Bearer ${token}`,
     },
   };
@@ -68,11 +74,10 @@ const shopeeUrl = "/direct-debit/core/v1/debit/payment-host-to-host"
   } catch (error) {
     res.status(500);
     res.json({
-      "response token" : token,
+      "response token": token,
       "data doku": error.response.data,
       body: body,
       header: config,
-      
     });
   }
 };
